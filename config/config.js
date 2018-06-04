@@ -1,0 +1,1 @@
+module.exports.apikey = '1qaz2wsx2030';
