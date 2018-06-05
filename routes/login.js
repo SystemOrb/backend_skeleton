@@ -27,7 +27,7 @@ app.post('/', (request, response) => {
             response.status(201).json({
                 status: true,
                 message: 'Usuario logeado con éxito',
-                key: userDB._id,
+                key: userDB,
                 sessionAuth: token
             });
         } else {

@@ -7,22 +7,27 @@ var signature = require('../config/config').apikey;
 const token = require('../middlewares/tokenizer');
 //GET USER FROM MONGO
 app.get('/', (request, response, next) => {
-    users.find({}, 'nombre email  img role').exec(
-        (err, users) => {
-            if (err) {
-                return response.status(500).json({
-                    status: false,
-                    message: 'Error al cargar los datos en la base de datos',
-                    callback: err
-                });
+    var offset = Number(request.query.offset || 0); // Pagination
+    users.find({}, 'nombre email  img role')
+        .skip(offset).limit(5).exec(
+            (err, usuarios) => {
+                if (err) {
+                    return response.status(500).json({
+                        status: false,
+                        message: 'Error al cargar los datos en la base de datos',
+                        callback: err
+                    });
+                }
+                users.count({}, (err, flag) => {
+                    response.status(200).json({
+                        status: true,
+                        message: 'Petición realizada con éxito',
+                        usuarios,
+                        flag
+                    });
+                })
             }
-            response.status(200).json({
-                status: true,
-                message: 'Petición realizada con éxito',
-                users: users
-            });
-        }
-    );
+        );
 });
 
 // POST NEW USER
