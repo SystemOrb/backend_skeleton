@@ -8,7 +8,8 @@ var setUser = new Schema({
     email: { type: String, unique: true, required: [true, 'Please write your email'] },
     password: { type: String, required: [true, 'Please write your password'] },
     img: { type: String, required: false },
-    role: { type: String, required: true, default: 'ADMIN_ROLE' }
+    role: { type: String, required: true, default: 'ADMIN_ROLE' },
+    GOOGLE: { type: Boolean, default: false }
 });
 
 //Exportamos este esquema
