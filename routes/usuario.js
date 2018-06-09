@@ -8,7 +8,7 @@ const token = require('../middlewares/tokenizer');
 //GET USER FROM MONGO
 app.get('/', (request, response, next) => {
     var offset = Number(request.query.offset || 0); // Pagination
-    users.find({}, 'nombre email  img role')
+    users.find({}, 'nombre email  img role GOOGLE')
         .skip(offset).limit(5).exec(
             (err, usuarios) => {
                 if (err) {
@@ -31,7 +31,7 @@ app.get('/', (request, response, next) => {
 });
 
 // POST NEW USER
-app.post('/', token.tokenGenerator, (request, response) => {
+app.post('/', (request, response) => {
     var body = request.body;
     var userData = new users({
         nombre: body.nombre,
