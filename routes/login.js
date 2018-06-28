@@ -64,7 +64,8 @@ app.post('/Google', async(request, response, next) => {
                     status: true,
                     message: 'Usuario logeado con éxito',
                     key: UsuarioGoogle,
-                    sessionAuth: token
+                    sessionAuth: token,
+                    menu: menuRole(UsuarioGoogle.role)
                 });
             }
         } else {
@@ -89,7 +90,8 @@ app.post('/Google', async(request, response, next) => {
                     status: true,
                     message: 'Usuario logeado con éxito',
                     key: newUser,
-                    sessionAuth: token
+                    sessionAuth: token,
+                    menu: menuRole(newUser.role)
                 });
             });
         }
@@ -124,7 +126,8 @@ app.post('/', (request, response) => {
                 status: true,
                 message: 'Usuario logeado con éxito',
                 key: userDB,
-                sessionAuth: token
+                sessionAuth: token,
+                menu: menuRole(userDB.role)
             });
         } else {
             return response.status(400).json({
@@ -135,6 +138,34 @@ app.post('/', (request, response) => {
     });
 });
 
+function menuRole(role) {
+    var menu = [{
+            title: 'Dashboard',
+            icon: 'mdi mdi-gauge',
+            submenu: [
+                { title: 'Barra de progreso', route: '/progress' },
+                { title: 'Temas', route: '/themes' },
+                { title: 'Gráficas', route: '/charts' },
+                { title: 'Promesas', route: '/promises' },
+                { title: 'rxjs', route: '/rxjs' },
+                { title: 'Perfil', route: '/profile' },
+            ]
+        },
+        {
+            title: 'Administración',
+            icon: 'mdi mdi-account-settings-variant',
+            submenu: [
+                /*{title: 'Usuarios', route: '/usuarios'},
+                {title: 'Hospitales', route: '/Hospital'},
+                {title: 'Medicos', route: '/Medicos'},*/
+            ]
+        }
+    ];
+    if (role === 'ADMIN_ROLE') {
+        menu[1].submenu.unshift({ title: 'Usuarios', route: '/usuarios' }, { title: 'Hospitales', route: '/Hospital' }, { title: 'Medicos', route: '/Medicos' });
+    }
+    return menu;
+}
 
 
 module.exports = app;

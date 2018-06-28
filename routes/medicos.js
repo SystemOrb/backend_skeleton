@@ -21,6 +21,32 @@ app.get('/', (request, response, next) => {
         }
     );
 });
+// GET MEDICO BY ID
+app.get('/:id', (request, response, next) => {
+    const id = request.params.id;
+    medicalSchema.findById(id).populate('usuarios').exec(
+        (err, medico) => {
+            if (err) {
+                return response.status(500).json({
+                    status: false,
+                    message: 'Fallo al conectar con la base de datos',
+                    err
+                });
+            }
+            if (!medico) {
+                return response.status(400).json({
+                    status: false,
+                    message: 'No existe este medico con esta ID'
+                });
+            }
+            response.status(200).json({
+                status: true,
+                message: 'Medico cargado con éxito',
+                medico
+            });
+        }
+    );
+});
 // INSERT NEW MEDICO
 app.post('/:id/:hospital', token.tokenGenerator, (request, response, next) => {
     const usr_id = request.params.id;
@@ -51,7 +77,7 @@ app.post('/:id/:hospital', token.tokenGenerator, (request, response, next) => {
 app.put('/:doctor', token.tokenGenerator, (request, response, next) => {
     const doctor = request.params.doctor;
     const header = request.body;
-    medicalSchema.findById(doctor, (err, doctorUpdate) => {
+    medicalSchema.findById(doctor).populate('hospital').exec((err, doctorUpdate) => {
         if (err) {
             return response.status(500).json({
                 status: false,
@@ -67,6 +93,7 @@ app.put('/:doctor', token.tokenGenerator, (request, response, next) => {
             });
         }
         doctorUpdate.nombre = header.nombre;
+        doctorUpdate.hospital = header.hospital;
         doctorUpdate.img = header.img;
         doctorUpdate.save((err, doctor) => {
             if (err) {

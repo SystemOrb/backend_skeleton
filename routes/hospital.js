@@ -22,6 +22,25 @@ app.get('/', (request, response, next) => {
             }
         );
 });
+// Obtener la data del hospital
+app.get('/:id', (request, response, next) => {
+    const id = request.params.id;
+    hospitalSchema.findById(id).populate('usuarios').exec(
+        (err, hospitales) => {
+            if (err) {
+                return response.status(500).json({
+                    status: false,
+                    message: 'No hemos podido conectar con la base de datos',
+                    error: err
+                });
+            }
+            response.status(200).json({
+                status: true,
+                message: 'Hospital cargado con éxito',
+                hospitales
+            });
+        })
+});
 // post new hospital
 app.post('/:id', token.tokenGenerator, (request, response, next) => {
     var header = request.body;

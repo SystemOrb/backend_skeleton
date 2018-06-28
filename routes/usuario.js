@@ -57,7 +57,7 @@ app.post('/', (request, response) => {
     });
 });
 // UPDATE USER 
-app.put('/:id', token.tokenGenerator, (request, response) => {
+app.put('/:id', [token.tokenGenerator, token.ROLE], (request, response) => {
     var body = request.body;
     var id = request.params.id;
     users.findById(id, (err, userExists) => {
@@ -96,7 +96,7 @@ app.put('/:id', token.tokenGenerator, (request, response) => {
 });
 
 //DELETE USER
-app.delete('/:id', token.tokenGenerator, (request, response) => {
+app.delete('/:id', [token.tokenGenerator, token.ROLE], (request, response) => {
     const id = request.params.id;
     users.findByIdAndRemove(id, (err, userExists) => {
         if (err) {
@@ -116,6 +116,27 @@ app.delete('/:id', token.tokenGenerator, (request, response) => {
             status: true,
             message: 'Usuario borrado con éxito',
             uData: userExists
+        });
+    });
+});
+/*
+auto renovador de token 
+*/
+app.get('/reloadToken', token.tokenGenerator, (request, response, next) => {
+    jwt.verify(request.query.token, signature, (err, decoded) => {
+        if (err) {
+            response.status(500).json({
+                status: false,
+                message: 'No pudo renovar el token, inicia sesión de nuevo',
+                err
+            });
+        }
+        // Entonces generamos un nuevo token
+        const newToken = jwt.sign({ userData: decoded }, signature, { expiresIn: 14400 });
+        response.status(200).json({
+            status: true,
+            message: 'Tu token ha sido renovado automaticamente',
+            newToken
         });
     });
 });

@@ -88,7 +88,7 @@ app.get('/all/:query', (request, response, next) => {
 // PROMESAS QUE RETORNARÁN LAS QUERYS DE FORMA ASINCRÓNA
 function searchHospitals(regex) {
     return new Promise((resolve, reject) => {
-        hospitals.find({ nombre: regex }).populate('usuarios', 'nombre email').exec((err, hospitales) => {
+        hospitals.find({ nombre: regex }).populate('usuarios', 'nombre email img').exec((err, hospitales) => {
             if (err) {
                 reject('No se han podido cargar los hospitales', err);
             } else {
@@ -100,7 +100,7 @@ function searchHospitals(regex) {
 
 function searchDoctors(regex) {
     return new Promise((resolve, reject) => {
-        doctors.find({ nombre: regex }).populate('usuarios', 'nombre email').exec((err, doctores) => {
+        doctors.find({ nombre: regex }).populate('usuarios', 'nombre email img').exec((err, doctores) => {
             if (err) {
                 reject('No se han podido cargar la lista de doctores');
             } else {
@@ -112,7 +112,7 @@ function searchDoctors(regex) {
 // Para buscar doble parametro dentro de una base de datos
 function searchUsers(regex) {
     return new Promise((resolve, reject) => {
-        usuarios.find({}, 'nombre email').or([
+        usuarios.find({}, 'nombre email img').or([
             { 'nombre': regex },
             { 'email': regex }
         ]).exec((err, users) => {

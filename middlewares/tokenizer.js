@@ -14,3 +14,15 @@ module.exports.tokenGenerator = function(request, response, next) {
         next();
     });
 }
+module.exports.ROLE = function(request, response, next) {
+    var id = request.params.id;
+    var user = request.body;
+    if (user.role === 'ADMIN_ROLE' || user._id === id) {
+        next();
+    } else {
+        return response.status(401).json({
+            status: false,
+            message: 'No tienes permiso para hacer eso'
+        });
+    }
+}

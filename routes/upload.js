@@ -90,7 +90,7 @@ function asignUser(collection, response, id, filename) {
             });
             break;
         case 'Medicos':
-            usuarios.findById(id, (err, usuario) => {
+            Medicos.findById(id, (err, usuario) => {
                 if (err) {
                     return response.status(500).json({
                         status: false,
@@ -122,7 +122,7 @@ function asignUser(collection, response, id, filename) {
             });
             break;
         case 'Hospital':
-            usuarios.findById(id, (err, usuario) => {
+            Hospital.findById(id, (err, usuario) => {
                 if (err) {
                     return response.status(500).json({
                         status: false,
